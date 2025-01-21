@@ -1,12 +1,15 @@
-import { CustomRequest } from "../../server";
 import { Response } from "express";
+import { CustomRequest } from "../../server";
+import { CategoriesService } from "../../services/categories.service";
 
-export let createCategoryController = async (req: CustomRequest,resp: Response)=>{
-    let title = req.body.title;
-    let reponse: any = await req.db.query(`insert into categories (title) values('${title}')`
+export let getCategoryController = async (
+  req: CustomRequest,
+  resp: Response
+) => {
+  let title = req.body.title;
 
-    );
-    let categoryId = reponse[0].insertId;
-    let categoryResponse: any = await req.db.query(`select * from categories where id = ${categoryId}`);
-    resp.send(categoryResponse[0][0]);
-}
+  let response: any = await CategoriesService.createCategory(title);
+  let categoryId = response.insertId;
+  let category: any = await CategoriesService.getCategoryId(categoryId);
+  resp.send(category);
+};
